@@ -10,23 +10,40 @@ export const OtpCheck = () => {
 
     const submitHandler = async (data) =>{
         try{
-            const res = await axios.post('/user/otpverify' , data , {withCredentials : true});
-        console.log(res);
-            toast.success('Otp verified!!', {
-                position: "top-right",
-                autoClose: 1800,
-                hideProgressBar: false,
-                closeOnClick: false,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                transition: Bounce,
-                });
-                setTimeout(()=>{
-                    navigate('/resetpass')
-                },2000)
+            console.log(data.otp.length)
+            if(data.otp.length === 4)
+            {
+                const res = await axios.post('/user/otpverify' , data , {withCredentials : true});
+                toast.success('Otp verified!!', {
+                    position: "top-right",
+                    autoClose: 1800,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                    });
+                    setTimeout(()=>{
+                        navigate('/resetpass')
+                    },2000)
+               
             }
+            else {
+                toast.warning('Otp must be 4 digit!!', {
+                    position: "top-right",
+                    autoClose: 1800,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                    transition: Bounce,
+                    });
+                }
+        }
         catch(err)
         {
             toast.error(err.response.data.message, {
@@ -41,6 +58,7 @@ export const OtpCheck = () => {
                 transition: Bounce,
                 });
         }
+        
     }
 
   return (

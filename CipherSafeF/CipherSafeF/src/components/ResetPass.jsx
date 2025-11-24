@@ -8,13 +8,11 @@ export const ResetPass = () => {
     const {register , handleSubmit} = useForm({})
     const navigate = useNavigate()
 
-    let token = localStorage.getItem("resetPassToken")
-    console.log(token)
-
     const submitHandler =  async (data) =>{ 
         try{
               
                 const res = await axios.post(`/user/resetpass`,data , {withCredentials : true});
+                localStorage.clear();
                 toast.success('Changes are Update Successfull', {
                     position: "top-right",
                     autoClose: 1800,

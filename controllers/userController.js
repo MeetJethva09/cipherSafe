@@ -218,6 +218,7 @@ const resetPassword = async (req , res) =>{
                             confirmPassword : confirmPassword
                         }
                     })
+                    res.clearCookie('resetPassToken')
                     res.status(200).json({
                         message : "Changes Success!!",
                     })
