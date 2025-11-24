@@ -8,6 +8,10 @@ let userSchema = new mongoose.Schema({
         type : String,
         required : true
     },
+    phoneNumber : {
+        type : Number,
+        required : true
+    },
     password : {
         type : String,
         required : true
@@ -22,6 +26,10 @@ let userSchema = new mongoose.Schema({
     },
     lastLogin : {
         type : Date
+    },
+    otp : {
+        type : Number,
+        default : null
     }
 } , {timestamps : true} )
 

@@ -12,7 +12,10 @@ const tokenGeneration =  (user) =>{
 
 const tokenExchange = (user) =>{
     const passPayLoad = {
-        email : user.email
+        email : user.email,
+        phoneNumber : user.phoneNumber,
+        _id : user._id,
+        otp : user.otp
     }
     const tokenPass = jwt.sign(passPayLoad , process.env.JWT_PASS_SECRET);
     return tokenPass;

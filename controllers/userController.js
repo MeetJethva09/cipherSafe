@@ -3,6 +3,7 @@ const userModel = require("../models/userModel")
 const moment = require('moment-timezone')
 const {tokenGeneration , tokenExchange , verifyExcahangeToken} = require("../utils/tokenGenerate")
 const {sendingMail} = require('../utils/mailService')
+const twilio = require('twilio');   
 
 const allUsers = async(req , res) =>{
     try{
@@ -145,10 +146,45 @@ const forgotPassword = async (req , res) =>{
     {
         let resetToken = tokenExchange(getUserByEmail);
         res.cookie('resetPassToken' , resetToken);
-        res.status(200).json({
-            message : "Verify",
-            resetPassToken : resetToken
-        })
+        try{
+            const otp = Math.floor(Math.random()*1000 + 999);
+
+            let userobj = verifyExcahangeToken(resetToken);
+         
+            const user = await userModel.findById(userobj._id);
+            if(!user)
+            {
+                res.status(404).json({
+                    message : "user not found!!"
+                })
+            }
+            else{
+
+                const accout_sid = process.env.ACCOUNT_SID;
+                const account_token = process.env.AUTH_TOKEN;
+
+                let client = new twilio(accout_sid , account_token)
+                const result = client.messages.create({
+                    body : `Otp for reset password of your cipherSafe account : (${otp})`,
+                    to : "+91"+userobj.phoneNumber,
+                    from : process.env.PHONE_NUMBER
+                })
+                    user.otp = otp;
+                    await user.save();      //otp store in user db..
+
+                    res.status(200).json({
+                        message : "otp done",
+                        resetPassToken : resetToken,
+                        data : otp
+                    })
+                }
+
+            }
+
+        catch(err)
+        {
+            console.log('Error occured while otp verification..',err)
+        }
     }
 }
 
@@ -165,16 +201,8 @@ const resetPassword = async (req , res) =>{
         else
         {
             //Update the mew password..
-            const verifyToken = verifyExcahangeToken(req.params.token)
-            const userByToken = await userModel.findOne({email : verifyToken.email})
-            if(!userByToken)
-            {
-                res.status(404).json({
-                    message : "Unauthorize due to verify token"
-                })
-            }
-            else
-            {
+            const token = req.cookies.resetPassToken;
+            const verifyToken = verifyExcahangeToken(token);
                      //Update new password with hashing
                     const hashPassword = await bcrypt.hash(password , 10);
 
@@ -193,13 +221,41 @@ const resetPassword = async (req , res) =>{
                     res.status(200).json({
                         message : "Changes Success!!",
                     })
-                
-            }
         }
     }
     catch(err)
     {
         console.log('Error occured while reset the password' , err)
+    }
+}
+
+const otpvalidation = async (req , res) =>{
+    try{
+        const token = req.cookies.resetPassToken;
+        const userObj = verifyExcahangeToken(token);
+        const user = await userModel.findById(userObj._id);
+        if(!user)
+        {
+            res.status(404).json({
+                message : "User not found!!"
+            })
+        }
+        else
+        {
+            if(user.otp != req.body.otp)
+            {
+                return res.status(402).json({
+                    message : "Invalid Otp!!"
+                }) 
+            }
+            res.json({
+                message : "otp Validation successfull",
+            })
+        }
+    }
+    catch(err)
+    {
+        console.log('Error occured while verify otp' , err);
     }
 }
 
@@ -212,5 +268,6 @@ module.exports = {
     allUsers,
     logoutAction,
     forgotPassword,
-    resetPassword
+    resetPassword,
+    otpvalidation
 }

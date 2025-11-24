@@ -13,6 +13,7 @@ import { ResetPass } from './components/ResetPass'
 import VaultViewPage from './components/VaultViewPage'
 import AddNewVault from './components/AddNewVault'
 import EditVault from './components/EditVault'
+import { OtpCheck } from './components/OtpCheck'
 function App() {
 
 axios.defaults.baseURL = 'http://localhost:3000';
@@ -24,6 +25,7 @@ axios.defaults.baseURL = 'http://localhost:3000';
           <Route path='/signup' element={<Signup/>} />
           <Route path='/resetpass' element={<ResetPass/>}/>
           <Route path='/forgotpass' element={<ForgotPass/>}/>
+          <Route path='/otp-verify' element={<OtpCheck/>} />
           <Route path='/login' element={<Login/>}/>
 
           <Route path='' element={<PrivateRouting/>}>

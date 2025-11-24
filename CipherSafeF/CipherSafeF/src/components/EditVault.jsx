@@ -3,6 +3,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import { Bounce, toast, ToastContainer } from "react-toastify";
 
 const EditVault = () => {
     const navigate = useNavigate()
@@ -15,7 +16,41 @@ const EditVault = () => {
         }
     });
 
+    const submitHandler = async (data) =>{
+    const res = await axios.put('/vault/vaultedit/'+vid , data);
+    toast.success('Vault update...', {
+      position: "top-right",
+      autoClose: 1800,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "dark",
+      transition: Bounce,
+      });
+      setTimeout(()=>{
+          navigate('/view/dashboard')
+      },2000)
+    }
+
   return (
+    <>
+       <ToastContainer
+      position="top-right"
+      autoClose={1800}
+      hideProgressBar={false}
+      newestOnTop={false}
+      closeOnClick={false}
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover
+      theme="dark"
+      transition={Bounce}
+      />
+
+
     <div className="min-h-screen bg-gray-950 text-gray-50 p-8 flex justify-center items-start">
       
       <div className="w-full max-w-3xl bg-gray-900 p-8 rounded-2xl shadow-xl border border-gray-800">
@@ -33,7 +68,7 @@ const EditVault = () => {
         </p>
 
         {/* Edit Vault Form */}
-        <form className="space-y-6">
+        <form className="space-y-6" onSubmit={handleSubmit(submitHandler)}>
 
           {/* Vault Name */}
           <div>
@@ -55,8 +90,7 @@ const EditVault = () => {
             >
               <option>Social</option>
               <option>Work</option>
-              <option>Finance</option>
-              <option>Shopping</option>
+              
             </select>
           </div>
 
@@ -105,6 +139,7 @@ const EditVault = () => {
 
       </div>
     </div>
+    </>
   );
 };
 

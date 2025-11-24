@@ -14,7 +14,7 @@ export const ResetPass = () => {
     const submitHandler =  async (data) =>{ 
         try{
               
-                const res = await axios.post(`/user/resetpass/${token}`,data , {withCredentials : true});
+                const res = await axios.post(`/user/resetpass`,data , {withCredentials : true});
                 toast.success('Changes are Update Successfull', {
                     position: "top-right",
                     autoClose: 1800,
@@ -33,7 +33,7 @@ export const ResetPass = () => {
         catch(err)
         {
            
-            toast.error(err, {
+            toast.error(err.response.message, {
                 position: "top-right",
                 autoClose: 1800,
                 hideProgressBar: false,

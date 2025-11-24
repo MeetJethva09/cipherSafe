@@ -46,11 +46,13 @@ const Dashboard = () => {
       
     const deleteAction = async (vid) =>{
         const res = await axios.delete('/vault/deletebyid/'+vid);
+        getVaultById()
     }
     
+
 useEffect(()=>{
     getVaultById()
-},[deleteAction])
+},[])
 
     return (
         // Full width container with dark theme

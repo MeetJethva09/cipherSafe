@@ -57,15 +57,46 @@ const getVaultByVaultId = async (req , res) =>{
 }
 
 const deleteVaultById = async (req , res) =>{
-    const delteVault = await vaultSchema.findByIdAndDelete(req.params.vid);
-    res.status(200).json({
-        message : "deleted"
-    })
+    try{
+        const delteVault = await vaultSchema.findByIdAndDelete(req.params.vid);
+        res.status(200).json({
+            message : "deleted"
+        })
+    }
+    catch(err)
+    {
+        console.log('Error occured while deltevault' ,err);
+    }
 }
+
+const editVault = async (req , res) =>{
+    try{
+        const {vaultName , username , category , notes } = req.body;
+        const editedVault = await vaultSchema.updateOne({_id : req.params.vid} , {
+            $set : {
+                vaultName, 
+                username,
+                category,
+                notes
+            }
+        })
+        res.status(200).json({
+            message : "edit success",
+            data : editedVault
+        })
+    }
+    catch(err)
+    {
+        console.log('Erro occured while updating vault', err);
+    }
+}
+
+
 
 module.exports = {
     addVault,
     getVaultById,
     getVaultByVaultId,
-    deleteVaultById
+    deleteVaultById,
+    editVault
 }

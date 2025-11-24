@@ -106,6 +106,20 @@ const Signup = () => {
             />
           </div>
           <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-300 mb-2">
+              Phone Number
+            </label>
+            <input
+              type="Number"
+              id="number"
+              name="phone"
+              {...register('phoneNumber')}
+              required
+              className="w-full px-4 py-2 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-lime-500 focus:border-transparent text-white"
+              placeholder="12345678989"
+            />
+          </div>
+          <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
               Master Password
             </label>

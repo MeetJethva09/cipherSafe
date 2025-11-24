@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const {addUser , loginUser , getUserById ,
- updateProfile , allUsers , logoutAction , forgotPassword , resetPassword} = require("../controllers/userController")
+ updateProfile , allUsers , logoutAction , forgotPassword , resetPassword , otpvalidation} = require("../controllers/userController")
 
 router.get("/" , (req ,res) =>{
     res.send("Hello from server..")
@@ -20,6 +20,8 @@ router.get('/logout' , logoutAction);
 
 router.post('/forgotpass' , forgotPassword);
 
-router.post('/resetpass/:token' , resetPassword);
+router.post('/resetpass' , resetPassword);
+
+router.post('/otpverify' , otpvalidation);
 
 module.exports = router;
